@@ -7,11 +7,11 @@ class ExampleRecipe(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
 
     def requirements(self):
-        self.requires("cuda-api-wrappers/0.8.0")
+        self.requires("cuda-api-wrappers/0.8.1")
 
     def build_requirements(self):
         """Build-time dependencies for testing and development"""
-        self.test_requires("gtest/1.14.0")
+        self.test_requires("gtest/1.17.0")
 
     def layout(self):
         cmake_layout(self)
