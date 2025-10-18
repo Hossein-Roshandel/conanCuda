@@ -14,7 +14,12 @@ projects with integrated testing, documentation, and code quality tools.
 - 📚 **Documentation**: Doxygen for API documentation generation
 - 🔍 **Code Quality**: clang-format, clang-tidy, and pre-commit hooks
 - 🛡️ **Memory Safety**: Valgrind, cuda-memcheck, and compute-sanitizer integration
+- 📁 **Organized Structure**: Professional directory layout (`src/`, `include/`, `tests/`)
 - ⚡ **Quick Setup**: Get started with a few commands
+
+> **Note**: The project follows a professional directory structure with source code in `src/`,
+> headers in `include/`, and tests in `tests/`. See [REORGANIZATION.md](REORGANIZATION.md) for
+> details.
 
 ## Prerequisites
 
@@ -115,12 +120,22 @@ conanCuda/
 │   ├── docker-compose.yml
 │   ├── post_create.sh      # Container initialization script
 │   └── post_start.sh
+├── .github/                 # GitHub Actions workflows
+│   └── workflows/          # CI/CD pipelines
 ├── build/                   # Build artifacts (generated)
 ├── docs/                    # Generated documentation
 │   └── html/               # Doxygen HTML output
+├── include/                 # Public header files
+│   └── vector_operations.cuh  # CUDA kernel header
 ├── scripts/                 # Utility scripts
 │   ├── memory_check.sh     # Memory analysis script
 │   └── static_analysis.sh  # Static code analysis script
+├── src/                     # Source code
+│   ├── examples/           # Example applications
+│   │   ├── main.cpp        # Simple C++ example
+│   │   └── vectorAdd.cu    # CUDA vector addition example
+│   └── kernels/            # CUDA kernel implementations
+│       └── vector_operations.cu  # Shared CUDA kernels
 ├── tests/                   # Unit tests
 │   └── test_vector_add.cu  # Vector addition tests
 ├── .clang-format           # Code formatting rules
@@ -131,13 +146,12 @@ conanCuda/
 ├── CMakeUserPresets.json   # User-specific CMake presets
 ├── conanfile.py           # Conan dependencies
 ├── Doxyfile               # Doxygen configuration
-├── main.cpp               # Simple C++ example
-├── vectorAdd.cu           # CUDA vector addition example
-├── vector_operations.cu   # Shared CUDA kernel implementation
-├── vector_operations.cuh  # CUDA kernel header
 ├── Makefile               # Build shortcuts
 ├── pyproject.toml         # Python/uv configuration
 ├── README.md              # This file
+├── DEVELOPMENT.md         # Detailed development guide
+├── FEATURES.md            # Feature summary
+├── QUICKREF.md            # Quick reference card
 ├── CONTRIBUTING.md        # Contribution guidelines
 └── LICENSE                # MIT license
 ```
@@ -193,10 +207,10 @@ cd build/build/Release && ctest --verbose
 
 ### Available Targets
 
-- `conancuda`: Simple "Hello World" C++ application
-- `vectoradd`: CUDA vector addition example using cuda-api-wrappers
-- `test_vector_add`: Unit tests for vector addition kernel
-- `vector_operations`: Shared library with CUDA kernels
+- `conancuda`: Simple "Hello World" C++ application (`src/examples/main.cpp`)
+- `vectoradd`: CUDA vector addition example using cuda-api-wrappers (`src/examples/vectorAdd.cu`)
+- `test_vector_add`: Unit tests for vector addition kernel (`tests/`)
+- `vector_operations`: Shared library with CUDA kernels (`src/kernels/`)
 
 ## Adding Dependencies
 

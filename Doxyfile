@@ -144,7 +144,9 @@ WARN_LOGFILE           =
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
 
-INPUT                  = . \
+INPUT                  = src \
+                         include \
+                         tests \
                          README.md
 
 INPUT_ENCODING         = UTF-8
@@ -178,7 +180,7 @@ EXCLUDE_PATTERNS       = */build/* \
 
 EXCLUDE_SYMBOLS        =
 
-EXAMPLE_PATH           = .
+EXAMPLE_PATH           = src/examples
 
 EXAMPLE_PATTERNS       = *.cpp \
                          *.cu

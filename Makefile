@@ -56,8 +56,8 @@ test: build
 # Format code with clang-format
 format:
 	@echo "Formatting code..."
-	find . -name "*.cpp" -o -name "*.hpp" -o -name "*.cu" -o -name "*.cuh" \
-		| grep -v "build/" | xargs clang-format -i --style=file
+	find src/ include/ tests/ -name "*.cpp" -o -name "*.hpp" -o -name "*.cu" -o -name "*.cuh" \
+		| xargs clang-format -i --style=file
 	@echo "✓ Code formatted"
 
 # Run static analysis

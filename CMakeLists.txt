@@ -24,16 +24,20 @@ option(ENABLE_CLANG_TIDY "Enable clang-tidy static analysis" OFF)
 # Find packages
 find_package(cuda-api-wrappers REQUIRED)
 
+# Include directories
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 # Add shared vector operations library
-add_library(vector_operations STATIC vector_operations.cu)
-target_include_directories(vector_operations PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(vector_operations STATIC src/kernels/vector_operations.cu)
+target_include_directories(vector_operations
+                           PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_property(TARGET vector_operations PROPERTY CUDA_ARCHITECTURES 75 80 86)
 target_link_libraries(vector_operations
                       PUBLIC cuda-api-wrappers::runtime-and-driver cuda)
 
 # Add executables
-add_executable(conancuda main.cpp)
-add_executable(vectoradd vectorAdd.cu)
+add_executable(conancuda src/examples/main.cpp)
+add_executable(vectoradd src/examples/vectorAdd.cu)
 
 # Set CUDA architectures (adjust based on your target GPUs) 75: Turing, 80:
 # Ampere, 86: Ampere (RTX 30xx)
@@ -42,6 +46,8 @@ set_property(TARGET vectoradd PROPERTY CUDA_ARCHITECTURES 75 80 86)
 # Link libraries
 target_link_libraries(vectoradd PRIVATE cuda-api-wrappers::runtime-and-driver
                                         cuda)
+target_include_directories(vectoradd
+                           PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Set compiler-specific options
 if(CMAKE_CUDA_COMPILER_ID STREQUAL "NVIDIA")
@@ -71,6 +77,8 @@ if(BUILD_TESTS)
   find_package(GTest REQUIRED)
 
   add_executable(test_vector_add tests/test_vector_add.cu)
+  target_include_directories(test_vector_add
+                             PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
   target_link_libraries(
     test_vector_add PRIVATE vector_operations GTest::gtest GTest::gtest_main
                             cuda-api-wrappers::runtime-and-driver cuda)
@@ -119,8 +127,10 @@ endif()
 # Add custom targets for code quality
 add_custom_target(
   format
-  COMMAND find ${CMAKE_SOURCE_DIR} -name "*.cpp" -o -name "*.hpp" -o -name
-          "*.cu" -o -name "*.cuh" | xargs clang-format -i --style=file
+  COMMAND
+    find ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/tests -name "*.cpp" -o -name "*.hpp" -o -name "*.cu" -o
+    -name "*.cuh" | xargs clang-format -i --style=file
   COMMENT "Formatting code with clang-format"
   VERBATIM)
 

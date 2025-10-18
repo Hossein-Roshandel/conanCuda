@@ -38,18 +38,25 @@ make debug           # Build in debug mode
 
 ```
 conanCuda/
-├── vectorAdd.cu              # Main CUDA example (documented)
-├── vector_operations.cu/h    # Shared kernel code
-├── tests/                    # Unit tests
-├── scripts/                  # Utility scripts
-├── docs/                     # Generated documentation
-├── .clang-format            # Code style rules
-├── .clang-tidy              # Static analysis rules
-├── .pre-commit-config.yaml  # Pre-commit hooks
-├── Doxyfile                 # Documentation config
-├── CMakeLists.txt           # Build configuration
-├── Makefile                 # Quick commands
-└── README.md                # Full documentation
+├── src/
+│   ├── examples/            # Example applications
+│   │   ├── vectorAdd.cu    # CUDA vector addition
+│   │   └── main.cpp        # C++ hello world
+│   └── kernels/             # CUDA kernel implementations
+│       └── vector_operations.cu
+├── include/                 # Public headers
+│   └── vector_operations.cuh
+├── tests/                   # Unit tests
+│   └── test_vector_add.cu
+├── scripts/                 # Utility scripts
+├── docs/                    # Generated documentation
+├── .clang-format           # Code style rules
+├── .clang-tidy             # Static analysis rules
+├── .pre-commit-config.yaml # Pre-commit hooks
+├── Doxyfile                # Documentation config
+├── CMakeLists.txt          # Build configuration
+├── Makefile                # Quick commands
+└── README.md               # Full documentation
 ```
 
 ## 🔧 CMake Build Options

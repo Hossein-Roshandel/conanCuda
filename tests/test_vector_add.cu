@@ -15,8 +15,7 @@
 #include <random>
 #include <vector>
 
-// Forward declaration of the kernel
-__global__ void vectorAdd(const float* A, const float* B, float* C, int numElements);
+#include "vector_operations.cuh"
 
 /**
  * @class VectorAddTest

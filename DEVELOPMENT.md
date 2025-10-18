@@ -15,6 +15,19 @@ tools and workflows in this project.
 - [Performance Optimization](#performance-optimization)
 - [CI/CD Integration](#cicd-integration)
 
+## Project Structure
+
+This project follows a standard C++ directory layout:
+
+- **src/examples/**: Example applications demonstrating CUDA features
+- **src/kernels/**: Reusable CUDA kernel implementations
+- **include/**: Public header files for the project
+- **tests/**: Unit tests using Google Test
+- **scripts/**: Build and analysis utility scripts
+- **docs/**: Generated documentation (Doxygen output)
+
+See [REORGANIZATION.md](REORGANIZATION.md) for detailed information about the structure.
+
 ## Development Environment Setup
 
 ### Local Development
