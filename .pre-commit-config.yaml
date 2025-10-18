@@ -1,0 +1,130 @@
+# Pre-commit hooks for CUDA C++ project
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^(.*\.patch|.*\.diff)$
+      - id: end-of-file-fixer
+        exclude: ^(.*\.patch|.*\.diff)$
+      - id: check-yaml
+        args: ['--unsafe']  # Allow custom YAML tags
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+      - id: check-json
+      - id: pretty-format-json
+        args: ['--autofix', '--no-sort-keys']
+        files: \.(json)$
+        exclude: compile_commands.json
+
+  # C++ formatting with clang-format
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v18.1.8
+    hooks:
+      - id: clang-format
+        types_or: [c++, c, cuda]
+        args: ['-i', '--style=file']
+        files: \.(cpp|hpp|cu|cuh|c|h|cc|hh)$
+
+  # CMake formatting
+  - repo: https://github.com/cheshirekow/cmake-format-precommit
+    rev: v0.6.13
+    hooks:
+      - id: cmake-format
+        args: ['--in-place']
+      - id: cmake-lint
+
+  # Python formatting (for build scripts)
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+        language_version: python3
+        args: ['--line-length=100']
+
+  # Python linting
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        args: ['--max-line-length=100', '--extend-ignore=E203,W503']
+
+  # Python import sorting
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ['--profile', 'black', '--line-length', '100']
+
+  # Markdown formatting
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+          - mdformat-black
+        args: ['--wrap', '100']
+
+  # Shell script linting
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
+    hooks:
+      - id: shellcheck
+        args: ['--severity=warning']
+
+  # Detect secrets
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package.lock.json
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ['-d', '{extends: default, rules: {line-length: {max: 120}}}']
+
+  # Spell checking (optional - can be disabled if too strict)
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        args:
+          - --ignore-words-list=crate,nd,sav,dout
+          - --skip="*.json,*.lock,build,*.svg"
+        exclude: ^(build/|\.git/|docs/html/)
+
+# Configure default behavior
+default_language_version:
+  python: python3
+
+# Files to exclude from all hooks
+exclude: |
+  (?x)^(
+    build/.*|
+    \.git/.*|
+    docs/html/.*|
+    .*\.patch|
+    .*\.diff|
+    compile_commands\.json
+  )$
+
+# Fail fast: stop on first failure
+fail_fast: false
+
+# Minimum pre-commit version
+minimum_pre_commit_version: '2.20.0'

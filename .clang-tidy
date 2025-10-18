@@ -1,0 +1,65 @@
+---
+# .clang-tidy configuration for CUDA C++ project
+# Comprehensive linting for modern C++ and CUDA code
+
+Checks: >
+  *,
+  -fuchsia-*,
+  -google-readability-todo,
+  -google-runtime-references,
+  -llvm-header-guard,
+  -llvmlibc-*,
+  -altera-*,
+  -abseil-*,
+  -android-*,
+  -darwin-*,
+  -objc-*,
+  -zircon-*,
+  -readability-magic-numbers,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-identifier-length,
+  -modernize-use-trailing-return-type,
+  -misc-non-private-member-variables-in-classes,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  -cert-err58-cpp,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -hicpp-no-array-decay
+
+WarningsAsErrors: ''
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: UPPER_CASE
+  - key: readability-function-size.LineThreshold
+    value: 150
+  - key: readability-function-size.StatementThreshold
+    value: 150
+  - key: readability-function-size.BranchThreshold
+    value: 20
+  - key: modernize-use-auto.MinTypeNameLength
+    value: 5
+  - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: 1
+
+HeaderFilterRegex: '.*\.(h|hpp|cuh)$'
+
+FormatStyle: file

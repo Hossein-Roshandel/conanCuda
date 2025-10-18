@@ -7,6 +7,18 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 
+# Documentation
+docs/html/
+docs/latex/
+docs/xml/
+doxygen_warnings.txt
+
+# Test and analysis reports
+*_report.txt
+compute_sanitizer_*.txt
+valgrind_report.txt
+cuda_memcheck_report.txt
+
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -27,6 +39,7 @@ graph_info.json
 
 # CMake
 CMakeUserPresets.json.user
+compile_commands.json
 
 # VS Code
 .vscode/settings.json
@@ -65,6 +78,7 @@ CMakeUserPresets.json.user
 *.app
 conancuda
 vectoradd
+test_vector_add
 
 # CUDA
 *.fatbin
