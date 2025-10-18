@@ -8,6 +8,9 @@ echo "=========================================="
 echo "Starting post-create setup..."
 echo "=========================================="
 
+echo "Installing pre-commit..."
+cd /workspace && make pre-commit
+
 # Detect and configure Conan profile
 echo "📦 Configuring Conan profile..."
 conan profile detect --force
