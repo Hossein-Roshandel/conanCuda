@@ -34,6 +34,13 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt-get update && apt-get install -y \
+    cuda-drivers \
+    && rm cuda-keyring_1.1-1_all.deb \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install latest CMake (if needed)
 RUN CMAKE_VERSION="3.28.1" && \
     wget -O cmake.tar.gz "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz" && \
