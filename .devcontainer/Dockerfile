@@ -1,5 +1,5 @@
 # CUDA C++ Development Container with Conan and CMake
-FROM nvidia/cuda:13.0.1-devel-ubuntu22.04
+FROM nvidia/cuda:12.9.1-devel-ubuntu22.04
 
 # Avoid timezone prompt during installation
 ENV DEBIAN_FRONTEND=noninteractive

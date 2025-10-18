@@ -21,17 +21,17 @@ help:
 
 # Install dependencies and build (Release mode)
 build:
-	uv run conan install . --output-folder=build --build=missing
+	conan install . --output-folder=build --build=missing
 	cmake --preset conan-release -DBUILD_TESTS=ON
 	cmake --build build/build/Release
 
 # Install dependencies only
 install:
-	uv run conan install . --output-folder=build --build=missing
+	conan install . --output-folder=build --build=missing
 
 # Build in debug mode
 debug:
-	uv run conan install . --output-folder=build --build=missing --settings=build_type=Debug
+	conan install . --output-folder=build --build=missing --settings=build_type=Debug
 	cmake --preset conan-debug -DBUILD_TESTS=ON || cmake --preset conan-default -DBUILD_TESTS=ON
 	cmake --build build/build/Debug || cmake --build build/build/Release
 
@@ -92,11 +92,10 @@ pre-commit:
 info:
 	@echo "=== Build Information ==="
 	@echo "CMake version: $(shell cmake --version | head -n1)"
-	@echo "Conan version: $(shell uv run conan --version 2>/dev/null || echo 'Not installed')"
+	@echo "Conan version: $(shell conan --version 2>/dev/null || echo 'Not installed')"
 	@echo "CUDA version: $(shell nvcc --version 2>/dev/null | grep release || echo 'Not installed')"
 	@echo "GPU info: $(shell nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo 'No GPU detected')"
 	@echo "Python version: $(shell python3 --version)"
-	@echo "uv version: $(shell uv --version 2>/dev/null || echo 'Not installed')"
 	@echo "clang-format: $(shell clang-format --version 2>/dev/null | head -n1 || echo 'Not installed')"
 	@echo "clang-tidy: $(shell clang-tidy --version 2>/dev/null | head -n1 || echo 'Not installed')"
 	@echo "Doxygen: $(shell doxygen --version 2>/dev/null || echo 'Not installed')"
