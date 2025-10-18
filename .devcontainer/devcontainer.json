@@ -1,0 +1,98 @@
+{
+    "name": "CUDA C++ Development with Conan & CMake",
+    "dockerComposeFile": [
+        "docker-compose.yml"
+    ],
+    "service": "dev",
+    "workspaceFolder": "/workspace",
+    "shutdownAction": "stopCompose",
+
+    // Configure tool-specific properties
+    "customizations": {
+        "vscode": {
+            // Extensions for C++/CUDA development
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cmake-tools",
+                "ms-python.python",
+                "ms-python.pylint",
+                "ms-vscode.makefile-tools",
+                "ms-vscode.vscode-json",
+                "redhat.vscode-yaml",
+                "ms-vscode.vscode-docker",
+                "github.copilot",
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {
+                // C++ settings
+                "C_Cpp.default.cppStandard": "c++17",
+                "C_Cpp.default.compilerPath": "/usr/bin/g++",
+                "C_Cpp.default.intelliSenseMode": "gcc-x64",
+                "C_Cpp.errorSquiggles": "enabled",
+
+                // CMake settings
+                "cmake.configureOnOpen": false,
+                "cmake.generator": "Ninja",
+                "cmake.preferredGenerators": ["Ninja", "Unix Makefiles"],
+
+                // Python settings
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.terminal.activateEnvironment": false,
+
+                // Editor settings
+                "editor.tabSize": 4,
+                "editor.insertSpaces": true,
+                "editor.detectIndentation": false,
+                "files.trimTrailingWhitespace": true,
+                "files.insertFinalNewline": true,
+
+                // Terminal settings
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/bin/bash",
+                        "icon": "terminal-bash"
+                    }
+                }
+            }
+        }
+    },
+
+    // Features to add to the dev container
+    "features": {
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "installDirectlyFromGitHubRelease": true
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally
+    "forwardPorts": [],
+
+    // Use 'postCreateCommand' to run commands after the container is created
+    "postCreateCommand": "bash .devcontainer/post_create.sh",
+
+    // Use 'postStartCommand' to run commands after the container starts
+    "postStartCommand": "bash .devcontainer/post_start.sh",
+
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root
+    "remoteUser": "vscode",
+
+    // Keep the container running
+    "overrideCommand": true,
+
+    // Update the remote user's UID/GID to match local user (if needed)
+    "updateRemoteUserUID": true,
+
+    // Mount the Docker socket for Docker-in-Docker scenarios
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
+
+    // Set environment variables
+    "containerEnv": {
+        "CUDA_VISIBLE_DEVICES": "all",
+        "NVIDIA_VISIBLE_DEVICES": "all",
+        "NVIDIA_DRIVER_CAPABILITIES": "compute,utility"
+    }
+}

@@ -1,0 +1,132 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  # Job for systems without GPU (build and basic tests only)
+  build-cpu:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential cmake ninja-build
+    
+    - name: Install CUDA Toolkit (for compilation only)
+      run: |
+        wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+        sudo dpkg -i cuda-keyring_1.0-1_all.deb
+        sudo apt-get update
+        sudo apt-get install -y cuda-toolkit-12-2
+        echo "/usr/local/cuda/bin" >> $GITHUB_PATH
+        echo "CUDA_HOME=/usr/local/cuda" >> $GITHUB_ENV
+    
+    - name: Verify installations
+      run: |
+        cmake --version
+        nvcc --version || echo "NVCC not available"
+        uv --version
+    
+    - name: Install Conan
+      run: uv tool install conan
+    
+    - name: Setup Conan profile
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        conan profile detect --force
+    
+    - name: Install dependencies
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        uv run conan install . --output-folder=build --build=missing
+    
+    - name: Configure CMake
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        cmake --preset conan-release
+    
+    - name: Build
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        cmake --build build/build/Release
+    
+    - name: Test basic executable
+      run: |
+        ./build/build/Release/conancuda
+    
+    # Note: vectoradd test is skipped on CPU-only systems as it requires GPU
+
+  # Documentation and linting checks
+  docs-and-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Check README
+      run: |
+        # Basic checks for README completeness
+        grep -q "## Quick Start" README.md
+        grep -q "## Prerequisites" README.md
+        grep -q "## License" README.md
+    
+    - name: Check required files
+      run: |
+        test -f LICENSE
+        test -f CONTRIBUTING.md
+        test -f CMakeLists.txt
+        test -f conanfile.py
+        test -f .devcontainer/devcontainer.json
+        test -f .devcontainer/Dockerfile
+    
+    - name: Validate CMakeLists.txt
+      run: |
+        # Check for modern CMake practices
+        grep -q "cmake_minimum_required.*3\." CMakeLists.txt
+        grep -q "LANGUAGES.*CUDA" CMakeLists.txt
+    
+    - name: Validate devcontainer
+      run: |
+        # Check devcontainer has required fields
+        python3 -m json.tool .devcontainer/devcontainer.json > /dev/null
+        grep -q "CUDA" .devcontainer/devcontainer.json
+
+  # Security checks
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run security checks
+      run: |
+        # Check for common security issues in build files
+        ! grep -r "curl.*http://" . --include="*.sh" --include="*.yml" --include="Dockerfile*" || echo "Warning: HTTP downloads detected"
+        
+        # Check .gitignore covers sensitive files
+        grep -q "\.env" .gitignore || echo "Consider adding .env to .gitignore"
