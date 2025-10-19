@@ -31,7 +31,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_library(vector_operations STATIC src/kernels/vector_operations.cu)
 target_include_directories(vector_operations
                            PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set_property(TARGET vector_operations PROPERTY CUDA_ARCHITECTURES 75 80 86)
+set_property(TARGET vector_operations PROPERTY CUDA_ARCHITECTURES 61 75 80 86)
 target_link_libraries(vector_operations
                       PUBLIC cuda-api-wrappers::runtime-and-driver cuda)
 
@@ -41,7 +41,7 @@ add_executable(vectoradd src/examples/vectorAdd.cu)
 
 # Set CUDA architectures (adjust based on your target GPUs) 75: Turing, 80:
 # Ampere, 86: Ampere (RTX 30xx)
-set_property(TARGET vectoradd PROPERTY CUDA_ARCHITECTURES 75 80 86)
+set_property(TARGET vectoradd PROPERTY CUDA_ARCHITECTURES 61 75 80 86)
 
 # Link libraries
 target_link_libraries(vectoradd PRIVATE cuda-api-wrappers::runtime-and-driver
@@ -82,7 +82,7 @@ if(BUILD_TESTS)
   target_link_libraries(
     test_vector_add PRIVATE vector_operations GTest::gtest GTest::gtest_main
                             cuda-api-wrappers::runtime-and-driver cuda)
-  set_property(TARGET test_vector_add PROPERTY CUDA_ARCHITECTURES 75 80 86)
+  set_property(TARGET test_vector_add PROPERTY CUDA_ARCHITECTURES 61 75 80 86)
 
   # Add to CTest
   add_test(NAME unit_tests COMMAND test_vector_add)
